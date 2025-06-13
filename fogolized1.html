@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fogolized Checker 🔥</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dot-flashing {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #fff;
+      animation: dotFlashing 1s infinite linear alternate;
+      animation-delay: 0.5s;
+    }
+    .dot-flashing::before,
+    .dot-flashing::after {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 0;
+    }
+    .dot-flashing::before {
+      left: -15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      animation: dotFlashing 1s infinite linear alternate;
+      animation-delay: 0s;
+    }
+    .dot-flashing::after {
+      left: 15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      animation: dotFlashing 1s infinite linear alternate;
+      animation-delay: 1s;
+    }
+    @keyframes dotFlashing {
+      0% { background-color: #fff; }
+      50%, 100% { background-color: #f87171; }
+    }
+  </style>
+</head>
+<body class="bg-[#020617] min-h-screen flex items-center justify-center text-white px-4 relative overflow-hidden">
+
+  <!-- 🔥 Right-side fire image -->
+<img src="fire-logo.webp" alt="Fire Logo"
+class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] opacity-80 pointer-events-none z-0"
+/>
+
+
+  <!-- 🔥 Main App Box -->
+  <div class="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg text-center w-full max-w-md relative z-10">
+    <h1 class="text-4xl font-bold mb-4">🔥Fogolized Checker</h1>
+    <p class="mb-6 text-lg">Enter your X (Twitter) username and see how much FIRE you carry:</p>
+
+    <input
+      type="text"
+      id="username"
+      placeholder="@yourhandle"
+      class="w-full px-4 py-3 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-red-300 mb-4"
+    />
+
+    <button
+      onclick="checkFogo()"
+      class="bg-white text-red-600 font-semibold px-6 py-3 rounded-xl hover:bg-red-100 transition"
+    >
+      Ignite 🔥
+    </button>
+
+    <div id="result" class="mt-6 text-2xl font-semibold min-h-[100px] flex items-center justify-center text-center"></div>
+  </div>
+
+  <script>
+    function getFogoMessage(percentage) {
+      if (percentage <= 10) return "🧊 Cold Ember – barely a flicker.";
+      if (percentage <= 25) return "💨 Smoke Signal – something's brewing.";
+      if (percentage <= 40) return "✨ Kindled Spark – you're heating up!";
+      if (percentage <= 60) return "🔥 Campfire Flame – steady burn.";
+      if (percentage <= 80) return "⚡ Burning Blaze – the Fogo is strong with you.";
+      if (percentage <= 94) return "🌪️ Wild Inferno – you're lit!";
+      return "👑 Fogo Deity – sparks, smoke, and unstoppable flames!";
+    }
+
+    function showResult(username, percentage) {
+      const resultDiv = document.getElementById("result");
+      const message = getFogoMessage(percentage);
+      resultDiv.innerHTML = `
+        <div class="mt-4">
+          <span class="block mb-1 text-lg">🔥 @<strong class="text-yellow-300">${username.replace('@','')}</strong>'s Fogo Level:</span>
+          <span class="text-yellow-300 text-3xl">${percentage}% 🔥</span><br>
+          <small class="text-sm block mt-2">${message}</small>
+        </div>
+      `;
+    }
+
+    function checkFogo(fromUrl = false) {
+      const usernameInput = document.getElementById("username");
+      const username = usernameInput.value.trim().toLowerCase();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+
+      if (!username || !username.startsWith("@")) {
+        resultDiv.innerHTML =
+          "<span class='text-yellow-300'>Please enter a valid X username (e.g., @yourhandle)</span>";
+        return;
+      }
+
+      // Show analyzing animation
+      resultDiv.innerHTML = `
+        <div class="text-lg">
+          Analyzing <strong class="text-yellow-300">${username}</strong>'s flames...
+          <div class="dot-flashing mx-auto mt-3"></div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults")) || {};
+        let percentage;
+
+        if (storedResults[username] !== undefined) {
+          percentage = storedResults[username];
+        } else {
+          percentage = Math.floor(Math.random() * 101);
+          storedResults[username] = percentage;
+          localStorage.setItem("fogoCheckerResults", JSON.stringify(storedResults));
+        }
+
+        showResult(username, percentage);
+      }, fromUrl ? 500 : 2000);
+    }
+
+    // Auto check if shared via URL
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const handle = params.get("handle");
+      if (handle && handle.startsWith("@")) {
+        const usernameInput = document.getElementById("username");
+        usernameInput.value = handle;
+        checkFogo(true);
+      }
+    });
+  </script>
+  <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2"> Developed and Designed by <a  href="https://x.com/01Rajpurohit" target="_blank"
+    >Shubh </a> </div>
+</body>
+</html>
