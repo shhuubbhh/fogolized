@@ -124,13 +124,17 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
         let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults")) || {};
         let percentage;
 
-        if (storedResults[username] !== undefined) {
-          percentage = storedResults[username];
-        } else {
-          percentage = Math.floor(Math.random() * 101);
-          storedResults[username] = percentage;
-          localStorage.setItem("fogoCheckerResults", JSON.stringify(storedResults));
-        }
+        const specialUsers = ["@thebookofjoey", "@RobertSagurton"];
+
+if (specialUsers.includes(username)) {
+  percentage = 100;
+} else if (storedResults[username] !== undefined) {
+  percentage = storedResults[username];
+} else {
+  percentage = Math.floor(Math.random() * 101);
+  storedResults[username] = percentage;
+  localStorage.setItem("fogoCheckerResults", JSON.stringify(storedResults));
+}
 
         showResult(username, percentage);
       }, fromUrl ? 500 : 2000);
