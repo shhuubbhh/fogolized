@@ -123,7 +123,7 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
       setTimeout(() => {
         let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults")) || {};
         let percentage;
-        const specialUsers = ["thebookofjoey", "RobertSagurton"];
+        const specialUsers = ["@thebookofjoey", "@RobertSagurton"];
         if (specialUsers.includes(username)) {
         percentage = 100;
         } else if (storedResults[username] !== undefined) {
