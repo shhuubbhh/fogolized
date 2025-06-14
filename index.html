@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fogolized Checker </title>
+  <title>Fogolized Checker 🔥</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .dot-flashing {
@@ -50,10 +50,9 @@
 <body class="bg-[#020617] min-h-screen flex items-center justify-center text-white px-4 relative overflow-hidden">
 
   <!-- 🔥 Right-side fire image -->
-<img src="fire-logo.webp" alt="Fire Logo"
-class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] opacity-80 pointer-events-none z-0"
-/>
-
+  <img src="fire-logo.webp" alt="Fire Logo"
+    class="fixed right-[-150px] top-1/2 transform -translate-y-1/2 max-w-[1000px] opacity-80 pointer-events-none z-0"
+  />
 
   <!-- 🔥 Main App Box -->
   <div class="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg text-center w-full max-w-md relative z-10">
@@ -91,11 +90,21 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
     function showResult(username, percentage) {
       const resultDiv = document.getElementById("result");
       const message = getFogoMessage(percentage);
+
+      // Build tweet content
+      const tweetText = encodeURIComponent(
+        `🔥 My Fogo Level: ${percentage}% 🔥\n${message}\nCheck yours at https://fogo-checker.vercel.app`
+      );
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
       resultDiv.innerHTML = `
         <div class="mt-4">
           <span class="block mb-1 text-lg">🔥 @<strong class="text-yellow-300">${username.replace('@','')}</strong>'s Fogo Level:</span>
           <span class="text-yellow-300 text-3xl">${percentage}% 🔥</span><br>
           <small class="text-sm block mt-2">${message}</small>
+          <a href="${tweetUrl}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-white text-black rounded-full hover:bg-yellow-200 transition">
+            Share on X 🔥
+          </a>
         </div>
       `;
     }
@@ -121,14 +130,13 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
       `;
 
       setTimeout(() => {
-        const specialUsers = ["@thebookofjoey", "@robertsagurton"]; // <-- put your target usernames here
+        let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults")) || {};
+        let percentage;
 
-        let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults") || "{}");
+        const specialUsers = ["@thebookofjoey", "@RobertSagurton"];
 
         if (specialUsers.includes(username)) {
           percentage = 100;
-          storedResults[username] = 100; // Optional: store it so it's cached
-          localStorage.setItem("fogoCheckerResults", JSON.stringify(storedResults));
         } else if (storedResults[username] !== undefined) {
           percentage = storedResults[username];
         } else {
@@ -141,7 +149,6 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
       }, fromUrl ? 500 : 2000);
     }
 
-    // Auto check if shared via URL
     window.addEventListener("DOMContentLoaded", () => {
       const params = new URLSearchParams(window.location.search);
       const handle = params.get("handle");
@@ -152,7 +159,10 @@ class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] op
       }
     });
   </script>
-  <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2"> Developed and Designed by <a  href="https://x.com/01Rajpurohit" target="_blank"
-    >Shubh </a> </div>
+
+  <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+    Developed and Designed by
+    <a href="https://x.com/01Rajpurohit" target="_blank" class="underline text-yellow-400 hover:text-yellow-300">Shubh</a>
+  </div>
 </body>
 </html>
