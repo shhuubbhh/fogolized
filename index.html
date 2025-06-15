@@ -108,7 +108,7 @@
 
       // Share button
       const shareDiv = document.getElementById("share");
-      const tweetText = encodeURIComponent(`My @${username.replace('@','')}'s Fogo Level is ${percentage}% 🔥 ${message} — check yours here 👉`);
+      const tweetText = encodeURIComponent(`My Fogolized Level is ${percentage}% 🔥 ${message} — check yours here 👉`);
       const shareUrl = `https://x.com/intent/tweet?text=${tweetText}&url=${window.location.origin}`;
       shareDiv.innerHTML = `
         <a href="${shareUrl}" target="_blank" class="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Share on X</a>
