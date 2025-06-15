@@ -51,8 +51,7 @@
 
   <!-- 🔥 Right-side fire image -->
   <img src="fire-logo.webp" alt="Fire Logo"
-    class="fixed right-[-150px] top-1/2 transform -translate-y-1/2 max-w-[1000px] opacity-80 pointer-events-none z-0"
-  />
+    class="fixed right-[-180px] top-1/2 transform -translate-y-1/2 max-w-[1000px] opacity-80 pointer-events-none z-0" />
 
   <!-- 🔥 Main App Box -->
   <div class="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg text-center w-full max-w-md relative z-10">
@@ -74,6 +73,7 @@
     </button>
 
     <div id="result" class="mt-6 text-2xl font-semibold min-h-[100px] flex items-center justify-center text-center"></div>
+    <div id="share" class="mt-4"></div>
   </div>
 
   <script>
@@ -87,25 +87,31 @@
       return "👑 Fogo Deity – sparks, smoke, and unstoppable flames!";
     }
 
+    function hashUsernameToPercentage(username) {
+      let hash = 0;
+      for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return Math.abs(hash % 101);
+    }
+
     function showResult(username, percentage) {
       const resultDiv = document.getElementById("result");
       const message = getFogoMessage(percentage);
-
-      // Build tweet content
-      const tweetText = encodeURIComponent(
-        `🔥 My Fogo Level: ${percentage}% 🔥\n${message}\nCheck yours at https://fogo-checker.vercel.app`
-      );
-      const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
-
       resultDiv.innerHTML = `
         <div class="mt-4">
           <span class="block mb-1 text-lg">🔥 @<strong class="text-yellow-300">${username.replace('@','')}</strong>'s Fogo Level:</span>
           <span class="text-yellow-300 text-3xl">${percentage}% 🔥</span><br>
           <small class="text-sm block mt-2">${message}</small>
-          <a href="${tweetUrl}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-white text-black rounded-full hover:bg-yellow-200 transition">
-            Share on X 🔥
-          </a>
         </div>
+      `;
+
+      // Share button
+      const shareDiv = document.getElementById("share");
+      const tweetText = encodeURIComponent(`My @${username.replace('@','')}'s Fogo Level is ${percentage}% 🔥 ${message} — check yours here 👉`);
+      const shareUrl = `https://x.com/intent/tweet?text=${tweetText}&url=${window.location.origin}?handle=${username}`;
+      shareDiv.innerHTML = `
+        <a href="${shareUrl}" target="_blank" class="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Share on X</a>
       `;
     }
 
@@ -113,15 +119,15 @@
       const usernameInput = document.getElementById("username");
       const username = usernameInput.value.trim().toLowerCase();
       const resultDiv = document.getElementById("result");
+      const shareDiv = document.getElementById("share");
       resultDiv.innerHTML = "";
+      shareDiv.innerHTML = "";
 
       if (!username || !username.startsWith("@")) {
-        resultDiv.innerHTML =
-          "<span class='text-yellow-300'>Please enter a valid X username (e.g., @yourhandle)</span>";
+        resultDiv.innerHTML = "<span class='text-yellow-300'>Please enter a valid X username (e.g., @yourhandle)</span>";
         return;
       }
 
-      // Show analyzing animation
       resultDiv.innerHTML = `
         <div class="text-lg">
           Analyzing <strong class="text-yellow-300">${username}</strong>'s flames...
@@ -130,19 +136,13 @@
       `;
 
       setTimeout(() => {
-        let storedResults = JSON.parse(localStorage.getItem("fogoCheckerResults")) || {};
+        const specialUsers = ["@thebookofjoey", "@robertsagurton"];
         let percentage;
-
-        const specialUsers = ["@thebookofjoey", "@RobertSagurton"];
 
         if (specialUsers.includes(username)) {
           percentage = 100;
-        } else if (storedResults[username] !== undefined) {
-          percentage = storedResults[username];
         } else {
-          percentage = Math.floor(Math.random() * 101);
-          storedResults[username] = percentage;
-          localStorage.setItem("fogoCheckerResults", JSON.stringify(storedResults));
+          percentage = hashUsernameToPercentage(username);
         }
 
         showResult(username, percentage);
@@ -160,9 +160,8 @@
     });
   </script>
 
-  <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-    Developed and Designed by
-    <a href="https://x.com/01Rajpurohit" target="_blank" class="underline text-yellow-400 hover:text-yellow-300">Shubh</a>
+  <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-white">
+    Developed and Designed by <a href="https://x.com/01Rajpurohit" target="_blank" class="underline">Shubh</a>
   </div>
 </body>
 </html>
